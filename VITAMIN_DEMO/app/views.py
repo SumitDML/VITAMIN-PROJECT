@@ -49,15 +49,21 @@ def get_tabs(request):
 @api_view(['GET'])
 def get_tab_childs(request):
     tabId = request.GET.get('tab_id')
+    try:
 
-    all_childs = TabChild.objects.filter(tab_id=tabId)
-    if not all_childs.exists():
+        all_childs = TabChild.objects.filter(tab_id=tabId)
+        if not all_childs.exists():
+            return Response({
+                'status': False,
+                'message': "No Childs Found!",
+            })
+
+        serializer = TabChildSerializer(all_childs, many=True, context={'request': request})
+    except Exception as e:
         return Response({
             'status': False,
-            'message': "No Childs Found!",
+            'message': "Something went wrong!",
         })
-
-    serializer = TabChildSerializer(all_childs, many=True, context={'request': request})
     return Response({
         'status': True,
         'message': "Fetched Successfully!!",
@@ -116,7 +122,8 @@ def get_child_data(request):
 
 @api_view(['GET'])
 def result_data(request):
-    zip_code = request.GET['zip']
+
+    zip_code = request.GET.get('zip')
 
     try:
         latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
