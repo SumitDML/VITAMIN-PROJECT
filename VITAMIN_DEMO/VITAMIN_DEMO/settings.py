@@ -51,6 +51,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+MIDDLEWARE_CLASSES = (
+    'app.CorsMiddleware'
+)
 
 ROOT_URLCONF = 'VITAMIN_DEMO.urls'
 
