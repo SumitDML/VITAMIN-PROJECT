@@ -42,18 +42,21 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+
+
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'app.CorsMiddleware'
-)
+]
 
 ROOT_URLCONF = 'VITAMIN_DEMO.urls'
 
@@ -138,4 +141,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+
+CORS_ORIGIN_WHITELIST = (
+  'http://dbviewerapp.foobar.in/',
+)
+
+# CORS_ALLOW_CREDENTIALS = TrueCORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3030',
+# ] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`CORS_ALLOWED_ORIGIN_REGEXES = [
+#
+
+CORS_ALLOW_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT',]
+
+CORS_ALLOW_HEADERS = ['accept','accept-encoding','authorization','content-type','dnt','origin','user-agent','x-csrftoken','x-requested-with',]
