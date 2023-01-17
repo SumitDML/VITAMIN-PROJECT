@@ -67,7 +67,7 @@ TEMPLATES = [
         },
     },
 ]
-
+dfdfdsf
 WSGI_APPLICATION = 'VITAMIN_DEMO.wsgi.application'
 
 # Database
