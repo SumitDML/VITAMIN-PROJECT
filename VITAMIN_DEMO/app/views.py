@@ -121,15 +121,29 @@ def get_child_data(request):
     })
 
 @api_view(['GET'])
-def result_data(request):
-
-    zip_code = request.GET.get('zip')
+def search_data(request):
 
     try:
-        latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
+        tab_id = request.GET.get('tab_id')
+        zip_code = request.GET.get('zip')
 
-        zone_data = Zones.objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude)
-        serializer = ZoneViewSerializer(zone_data, many=True, context={'request': request})
+        all_childs = TabChild.objects.filter(tab_id=tab_id)
+
+        if not all_childs.exists():
+            return Response({
+                'status': False,
+                'message': "No Child Record Found!",
+            })
+
+        if not zip_code is None:
+            zone = all_childs.filter(name='Zones')
+            serializer = TabChildNameSerializer(zone, many=True, context={'request': request})
+            zone_name = serializer.data[0].get('name')
+
+            latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
+
+            zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude)
+            serializer = ZoneViewSerializer(zone_data, many=True, context={'request': request})
 
     except ZipCodes.DoesNotExist:
         return Response({
