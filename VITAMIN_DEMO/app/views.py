@@ -1,6 +1,6 @@
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from app.util import switch, switcher
@@ -11,16 +11,16 @@ def get_tabs(request):
     tabId = request.GET.get('tabId')
     try:
 
-        if tabId is None:
+        if tabId is None or len(tabId) == 0:
             parents = Tabs.objects.all()
             if not parents.exists():
                 return Response({
                     'status': False,
                     'message': "No Records Found!",
-                })
+                }, status=status.HTTP_404_NOT_FOUND)
             serializer = TabSerializer(parents, many=True)
             return Response({
-                'status': 200,
+                'status': True,
                 'message': "Data Fetched Successfully!",
                 'data': serializer.data
             })
@@ -31,10 +31,10 @@ def get_tabs(request):
                 return Response({
                     'status': False,
                     'message': "No Records Found!",
-                })
+                }, status=status.HTTP_404_NOT_FOUND)
             serializers1 = TabSerializer(parents, many=True)
             return Response({
-                'status': 200,
+                'status': True,
                 'message': "Data Fetched Successfully!",
                 'data': serializers1.data
             })
@@ -43,12 +43,18 @@ def get_tabs(request):
     return Response({
         'status': False,
         'message': "Some Error Occured!",
-    })
+    }, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
 def get_tab_childs(request):
     tabId = request.GET.get('tab_id')
+    if tabId is None or len(tabId) == 0:
+        return Response({
+            'status': False,
+            'message': "Tab Id is required!",
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     try:
 
         all_childs = TabChild.objects.filter(tab_id=tabId)
@@ -56,14 +62,14 @@ def get_tab_childs(request):
             return Response({
                 'status': False,
                 'message': "No Childs Found!",
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
 
         serializer = TabChildSerializer(all_childs, many=True, context={'request': request})
     except Exception as e:
         return Response({
             'status': False,
             'message': "Something went wrong!",
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     return Response({
         'status': True,
         'message': "Fetched Successfully!!",
@@ -74,7 +80,19 @@ def get_tab_childs(request):
 @api_view(['GET'])
 def get_child_data(request):
     tabId = request.GET.get('tab_id')
+    if tabId is None or len(tabId) == 0:
+        return Response({
+            'status': False,
+            'message': "Tab Id is required!",
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     tabChildId = request.GET.get('tab_child_id')
+    if tabChildId is None or len(tabChildId) == 0:
+        return Response({
+            'status': False,
+            'message': "Tab_Child Id is required!",
+        }, status=status.HTTP_400_BAD_REQUEST)
+
     page_number = request.GET.get('page_number')
 
     try:
@@ -84,13 +102,13 @@ def get_child_data(request):
             return Response({
                 'status': False,
                 'message': "No Child Record Found!",
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
         result = all_childs.filter(tab_child_id=tabChildId)
         if not result.exists():
             return Response({
                 'status': False,
                 'message': "Invalid child Id!",
-            })
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = TabChildNameSerializer(result, many=True, context={'request': request})
         name = serializer.data[0].get('name')
@@ -104,7 +122,7 @@ def get_child_data(request):
             # if page_number is not an integer then assign the first page
             page_obj = p.page(1)
         serialized_data = serializer1(page_obj, many=True, context={'request': request})
-        totalPages = p.page_range.stop-1
+        totalPages = p.page_range.stop - 1
         return Response({
             'status': True,
             'message': "Fetched Successfully!!",
@@ -115,16 +133,21 @@ def get_child_data(request):
         })
     except Exception as e:
         print(e)
-    return Response({
-        'status': True,
-        'message': "Sorry ! Some Error Occured!",
-    })
+        return Response({
+            'status': True,
+            'message': "Something Went Wrong!",
+        }, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def search_data(request):
-
+    tab_id = request.GET.get('tab_id')
+    if tab_id is None or len(tab_id) == 0:
+        return Response({
+            'status': False,
+            'message': "Tab Id is required!",
+        }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        tab_id = request.GET.get('tab_id')
         zip_code = request.GET.get('zip')
 
         all_childs = TabChild.objects.filter(tab_id=tab_id)
@@ -133,7 +156,7 @@ def search_data(request):
             return Response({
                 'status': False,
                 'message': "No Child Record Found!",
-            })
+            }, status=status.HTTP_404_NOT_FOUND)
 
         if not zip_code is None:
             zone = all_childs.filter(name='Zones')
@@ -149,12 +172,13 @@ def search_data(request):
         return Response({
             'status': False,
             'message': "Invalid Zip-Code!",
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        print(e)
         return Response({
             'status': False,
             'message': "Something went wrong!",
-        })
+        }, status=status.HTTP_400_BAD_REQUEST)
     return Response({
         'status': True,
         'message': "Fetched Successfully!!",
