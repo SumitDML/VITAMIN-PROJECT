@@ -165,7 +165,11 @@ def search_data(request):
 
             latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
 
-            zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude)
+            if latitude > 0:
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='N')
+            else:
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='S')
+
             serializer = ZoneViewSerializer(zone_data, many=True, context={'request': request})
 
     except ZipCodes.DoesNotExist:
