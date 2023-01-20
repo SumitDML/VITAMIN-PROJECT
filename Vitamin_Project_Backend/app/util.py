@@ -12,6 +12,12 @@ def zones():
 def Sunshine_availibilty():
     return SunshineAvailability
 
+def Common_Food_Allergy():
+    return FoodAllergy
+
+
+def Spices():
+    return Spices
 
 def default():
     return "Invalid Model"
@@ -19,5 +25,7 @@ def default():
 
 switcher = {
     "Zones": zones,
-    "Sunshine_Availability": Sunshine_availibilty
+    "Sunshine_Availability": Sunshine_availibilty,
+    "Common_Food_Allergy": Common_Food_Allergy,
+    "Spices": Spices
 }
