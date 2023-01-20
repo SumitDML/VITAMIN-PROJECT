@@ -85,16 +85,16 @@ def get_child_data(request):
             'status': False,
             'message': "Tab Id is required!",
         }, status=status.HTTP_400_BAD_REQUEST)
-
+    print(1)
     tabChildId = request.GET.get('tab_child_id')
     if tabChildId is None or len(tabChildId) == 0:
         return Response({
             'status': False,
             'message': "Tab_Child Id is required!",
         }, status=status.HTTP_400_BAD_REQUEST)
-
+    print(2)
     page_number = request.GET.get('page_number')
-
+    print(3)
     try:
         all_childs = TabChild.objects.filter(tab_id=tabId)
 
@@ -103,18 +103,24 @@ def get_child_data(request):
                 'status': False,
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
+        print(4)
         result = all_childs.filter(tab_child_id=tabChildId)
+        print(5)
         if not result.exists():
             return Response({
                 'status': False,
                 'message': "Invalid child Id!",
             }, status=status.HTTP_400_BAD_REQUEST)
-
+        print(6)
         serializer = TabChildNameSerializer(result, many=True, context={'request': request})
         name = serializer.data[0].get('name')
+        print(name)
+        print(7)
         model = switch(name)
         serializer1 = getGenericSerializer(model)
+        print(77)
         data = model.objects.all().order_by('id')
+        print(8)
         p = Paginator(data, 25)
         try:
             page_obj = p.get_page(page_number)  # returns the desired page object
@@ -172,7 +178,7 @@ def search_data(request):
 
             serializer = ZoneViewSerializer(zone_data, many=True, context={'request': request})
 
-    except ZipCodes.DoesNotExist:
+    except ZipCodes.DoesNotExist :
         return Response({
             'status': False,
             'message': "Invalid Zip-Code!",
