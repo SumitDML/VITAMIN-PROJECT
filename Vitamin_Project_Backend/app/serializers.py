@@ -6,7 +6,7 @@ class SunshineAvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = SunshineAvailability
         # fields = "__all__"
-        fields = ['Month', 'Strength']
+        fields = ['id', 'Month', 'Strength']
 
 
 # class ZoneSerializer(serializers.ModelSerializer):

@@ -4,6 +4,8 @@ from rest_framework import status
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from app.util import switch, switcher
+from datetime import datetime
+
 
 
 @api_view(['GET'])
@@ -170,7 +172,12 @@ def search_data(request):
             else:
                 zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='S')
 
-            serializer = ZoneViewSerializer(zone_data, many=True, context={'request': request})
+            serializer1 = ZoneViewSerializer(zone_data, many=True, context={'request': request})
+            result = serializer1.data
+            today = datetime.now()
+            for itr in result:
+                sunshine_data = SunshineAvailability.objects.filter(ZoneID=itr['id']).filter(Month=today.month)
+                serializer2 = SunshineAvailabilitySerializer(sunshine_data, many=True, context={'request': request})
 
     except ZipCodes.DoesNotExist:
         return Response({
@@ -186,5 +193,6 @@ def search_data(request):
     return Response({
         'status': True,
         'message': "Fetched Successfully!!",
-        'zones': serializer.data,
+        'zones': serializer1.data,
+        'sunshine': serializer2.data
     })
