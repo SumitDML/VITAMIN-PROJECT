@@ -28,10 +28,12 @@ INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (10,'Food
 INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (1,1);
 INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (1,2);
 
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (4,3);
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (5,4);
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (6,5);
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (7,6);
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (8,7);
-INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (9,8);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (2,3);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (3,4);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (4,5);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (5,6);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (6,7);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (7,8);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (8,9);
+INSERT INTO tab_child_mappings (tab_id,tab_child_id) VALUES (9,10);
 
