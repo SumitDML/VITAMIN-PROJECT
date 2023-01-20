@@ -5,7 +5,7 @@ from django.db import migrations
 
 def load_app_from_sql():
     import os
-    sql_statements = open(os.path.join('app/sql/AllergyAndSpices.sql'), 'r').read()
+    sql_statements = open(os.path.join('app/sql/NewTabs.sql'), 'r').read()
     return sql_statements
 
 
