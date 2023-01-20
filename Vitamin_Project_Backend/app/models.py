@@ -83,7 +83,7 @@ class ZipCodes(models.Model):
 class FoodAllergy(models.Model):
     foodAllergyId = models.IntegerField(primary_key=True, editable=False, name='id')
     foodAllergyName = models.CharField(name='food_allergy_name', max_length=255)
-    allergyDescription = models.TextField(name='food_allergy_description')
+    allergyDescription = models.TextField(name='food_allergy_description',null=True)
 
     class Meta:
         db_table = 'food_allergy'
@@ -97,8 +97,8 @@ class Spices(models.Model):
     spiceName = models.CharField(name='spice_name', max_length=255)
     ingredients = models.CharField(name='ingredients', max_length=255)
     upcCode = models.CharField(name='upc_code', max_length=255)
-    sizeQuantity = models.FloatField(name='size_quantity', null=False)
-    sizeMetric = models.CharField(name='size_metric', null=False, max_length=255)
+    sizeQuantity = models.FloatField(name='size_quantity',null=True)
+    sizeMetric = models.CharField(name='size_metric', null=True, max_length=255)
 
     class Meta:
         db_table = 'spices'
