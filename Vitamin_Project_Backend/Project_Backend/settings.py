@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'Project_Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'vitaminnutrition1',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',

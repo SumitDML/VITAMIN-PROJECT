@@ -17,7 +17,7 @@ INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (2,'Sunsh
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (3,'Supplements','Supplements',2);
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (4,'Nutrients','Nutrients',3);
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (5,'Spices','Spices',4);
-INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (6,'Common_Food_Allergy','Common Food Allergy',5);
+INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (6,'Common_Food_Allergies','Common Food Allergies',5);
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (7,'Restaurants','Restaurants',6);
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (8,'Recipes','Recipes',7);
 INSERT INTO tab_childs (tab_child_id,name, display_name,tab_id) VALUES (9,'Pollution','Pollution',8);
