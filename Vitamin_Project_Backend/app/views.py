@@ -134,6 +134,11 @@ def get_child_data(request):
             'data': serialized_data.data
 
         })
+    except AttributeError:
+        return Response({
+            'status': True,
+            'message': "Child Module Not Found!",
+        }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
         return Response({
