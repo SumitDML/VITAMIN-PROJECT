@@ -82,8 +82,8 @@ class ZipCodes(models.Model):
 
 class FoodAllergy(models.Model):
     foodAllergyId = models.IntegerField(primary_key=True, editable=False, name='id')
-    foodAllergyName = models.CharField(name='food_allergy_name', max_length=255)
-    allergyDescription = models.TextField(name='food_allergy_description',null=True)
+    foodAllergyName = models.CharField(name='Allergy', max_length=255)
+    allergyDescription = models.TextField(name='Description',null=True)
 
     class Meta:
         db_table = 'food_allergy'
@@ -94,12 +94,13 @@ class FoodAllergy(models.Model):
 
 class Spices(models.Model):
     spiceId = models.IntegerField(primary_key=True, editable=False, name='id')
-    spiceName = models.CharField(name='spice_name', max_length=255)
-    ingredients = models.CharField(name='ingredients', max_length=255)
-    upcCode = models.CharField(name='upc_code', max_length=255)
-    sizeQuantity = models.FloatField(name='size_quantity',null=True)
-    sizeMetric = models.CharField(name='size_metric', null=True, max_length=255)
-
+    spiceName = models.CharField(name='Name', max_length=255)
+    ingredients = models.CharField(name='Ingredients', max_length=255)
+    upcCode = models.CharField(name='UPC_Code', max_length=255)
+    sizeQuantity = models.FloatField(name='Size_Quantity',null=True)
+    sizeMetric = models.CharField(name='Size_Metric', null=True, max_length=255)
+    imageUrl = models.TextField(name='Image_URL')
+    reciepesUrl = models.TextField(name='Recipes_URL',null=True)
     class Meta:
         db_table = 'spices'
 
