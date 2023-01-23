@@ -166,13 +166,15 @@ def search_data(request):
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
 
-        if int(tab_id) == 3:
-            search = request.GET.get('search')
+        search = request.GET.get('search')
+
+        if int(tab_id) == 3 and search is not None and len(search) != 0:
+
             nutrient_data = Nutrients.objects.filter(Nutrient__istartswith=search)
             if len(nutrient_data) == 0:
                 return Response({
                     'status': False,
-                    'message': "No data!",
+                    'message': "No data Found!!",
                 }, status=status.HTTP_400_BAD_REQUEST)
             serializer3 = NutrientsSerializer(nutrient_data, many=True, context={'request': request})
             return Response({
@@ -182,11 +184,10 @@ def search_data(request):
             })
 
         elif int(tab_id) == 1:
-            zip_code = request.GET.get('search')
             zone = all_childs.filter(name='Zones')
             serializer = TabChildNameSerializer(zone, many=True, context={'request': request})
             zone_name = serializer.data[0].get('name')
-            latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
+            latitude = ZipCodes.objects.get(zip_code=search).latitude
 
             if latitude > 0:
                 zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
