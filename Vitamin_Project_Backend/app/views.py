@@ -89,6 +89,7 @@ def get_child_data(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     tabChildId = request.GET.get('tab_child_id')
+    
     if tabChildId is None or len(tabChildId) == 0:
         return Response({
             'status': False,
@@ -106,12 +107,12 @@ def get_child_data(request):
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
         result = all_childs.filter(tab_child_id=tabChildId)
+
         if not result.exists():
             return Response({
                 'status': False,
                 'message': "Invalid child Id!",
             }, status=status.HTTP_400_BAD_REQUEST)
-
         serializer = TabChildNameSerializer(result, many=True, context={'request': request})
         name = serializer.data[0].get('name')
         model = switch(name)
@@ -133,6 +134,11 @@ def get_child_data(request):
             'data': serialized_data.data
 
         })
+    except AttributeError:
+        return Response({
+            'status': True,
+            'message': "Child Module Not Found!",
+        }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
         return Response({
@@ -179,7 +185,7 @@ def search_data(request):
                 sunshine_data = SunshineAvailability.objects.filter(ZoneID=itr['id']).filter(Month=today.month)
                 serializer2 = SunshineAvailabilitySerializer(sunshine_data, many=True, context={'request': request})
 
-    except ZipCodes.DoesNotExist:
+    except ZipCodes.DoesNotExist :
         return Response({
             'status': False,
             'message': "Invalid Zip-Code!",

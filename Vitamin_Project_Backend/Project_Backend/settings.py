@@ -83,18 +83,18 @@ WSGI_APPLICATION = 'Project_Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbtest',
-        'USER': 'usertest',
-        'PASSWORD': 'pwtest',
-        'HOST': '14.97.60.130',
+        'NAME': 'postgres',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'my_database1',
+#         'NAME': 'vitamin',
 #         'USER': 'root',
 #         'PASSWORD': 'Sumit@8105',
 #         'HOST': '127.0.0.1',

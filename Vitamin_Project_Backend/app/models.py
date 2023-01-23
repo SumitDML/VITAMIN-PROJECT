@@ -1,4 +1,3 @@
-
 from django.db import models
 
 
@@ -33,7 +32,8 @@ class TabChild(models.Model):
 
 class TabChildMappings(models.Model):
     tabId = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='tabs', name='tab', null=True)
-    tabChildId = models.ForeignKey(TabChild, on_delete=models.CASCADE, related_name='childs', name='tab_child',null=True)
+    tabChildId = models.ForeignKey(TabChild, on_delete=models.CASCADE, related_name='childs', name='tab_child',
+                                   null=True)
 
     class Meta:
         db_table = 'tab_child_mappings'
@@ -75,6 +75,33 @@ class ZipCodes(models.Model):
 
     class Meta:
         db_table = 'zip_codes'
+
+    def __str__(self):
+        return self.name
+
+
+class FoodAllergy(models.Model):
+    foodAllergyId = models.IntegerField(primary_key=True, editable=False, name='id')
+    foodAllergyName = models.CharField(name='food_allergy_name', max_length=255)
+    allergyDescription = models.TextField(name='food_allergy_description',null=True)
+
+    class Meta:
+        db_table = 'food_allergy'
+
+    def __str__(self):
+        return self.name
+
+
+class Spices(models.Model):
+    spiceId = models.IntegerField(primary_key=True, editable=False, name='id')
+    spiceName = models.CharField(name='spice_name', max_length=255)
+    ingredients = models.CharField(name='ingredients', max_length=255)
+    upcCode = models.CharField(name='upc_code', max_length=255)
+    sizeQuantity = models.FloatField(name='size_quantity',null=True)
+    sizeMetric = models.CharField(name='size_metric', null=True, max_length=255)
+
+    class Meta:
+        db_table = 'spices'
 
     def __str__(self):
         return self.name
