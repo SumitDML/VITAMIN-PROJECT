@@ -54,3 +54,9 @@ def getGenericSerializer(model_arg):
             fields = '__all__'
 
     return GenericSerializer
+
+
+class SpicesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spices
+        fields = '__all__'

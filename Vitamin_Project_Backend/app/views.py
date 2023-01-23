@@ -1,10 +1,12 @@
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from app.util import switch, switcher
 from datetime import datetime
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 
@@ -174,9 +176,11 @@ def search_data(request):
             latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
 
             if latitude > 0:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='N')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
+                                                             NorthSouth='N')
             else:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='S')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
+                                                             NorthSouth='S')
 
             serializer1 = ZoneViewSerializer(zone_data, many=True, context={'request': request})
             result = serializer1.data
@@ -185,7 +189,7 @@ def search_data(request):
                 sunshine_data = SunshineAvailability.objects.filter(ZoneID=itr['id']).filter(Month=today.month)
                 serializer2 = SunshineAvailabilitySerializer(sunshine_data, many=True, context={'request': request})
 
-    except ZipCodes.DoesNotExist :
+    except ZipCodes.DoesNotExist:
         return Response({
             'status': False,
             'message': "Invalid Zip-Code!",
@@ -202,3 +206,28 @@ def search_data(request):
         'zones': serializer1.data,
         'sunshine': serializer2.data
     })
+
+
+class SearchListView(ListAPIView):
+
+    # child_name=None
+    # def getdata(self, request):
+    #     tab_id = request.GET.get('tab_id')
+    #     if tab_id is None or len(tab_id) == 0:
+    #         return Response({
+    #             'status': False,
+    #             'message': "Tab Id is required!",
+    #         }, status=status.HTTP_400_BAD_REQUEST)
+    #     child = TabChild.objects.filter(tab_id=tab_id).first()
+    #     if not child.exists():
+    #         return Response({
+    #             'status': False,
+    #             'message': "No Child Record Found!",
+    #         }, status=status.HTTP_404_NOT_FOUND)
+    #
+    #     serializer = TabChildNameSerializer(child, many=True, context={'request': request})
+    #     child_name = serializer.data[0].get('name')
+    queryset = N.objects.all()
+    serializer_class = SpicesSerializer
+    filter_backends = (SearchFilter, OrderingFilter)
+    search_fields = ('spice_name', '^ingredients')
