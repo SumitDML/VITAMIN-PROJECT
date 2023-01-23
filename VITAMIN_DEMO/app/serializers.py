@@ -22,6 +22,10 @@ class ZoneViewSerializer(serializers.ModelSerializer):
         model = Zones
         fields = ['id', 'LatitudeMin', 'LatitudeMax', 'NorthSouth']
 
+class NutrientsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nutrients
+        fields = '__all__'
 
 class ZipCodesSerializer(serializers.ModelSerializer):
     class Meta:

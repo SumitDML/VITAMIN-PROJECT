@@ -1,11 +1,12 @@
 from rest_framework.decorators import api_view
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import *
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from app.util import switch, switcher
 from datetime import datetime
-
 
 
 @api_view(['GET'])
@@ -89,7 +90,7 @@ def get_child_data(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     tabChildId = request.GET.get('tab_child_id')
-    
+
     if tabChildId is None or len(tabChildId) == 0:
         return Response({
             'status': False,
@@ -165,17 +166,29 @@ def search_data(request):
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
 
-        zip_code = request.GET.get('zip')
-        if zip_code:
+        if int(tab_id) == 3:
+            search = request.GET.get('search')
+            nutrient_data = Nutrients.objects.filter(Nutrient__istartswith=search)
+            serializer3 = NutrientsSerializer(nutrient_data, many=True, context={'request': request})
+            return Response({
+                'status': True,
+                'message': "Fetched Successfully!!",
+                'data': serializer3.data,
+            })
+
+        elif int(tab_id) == 1:
+            zip_code = request.GET.get('search')
             zone = all_childs.filter(name='Zones')
             serializer = TabChildNameSerializer(zone, many=True, context={'request': request})
             zone_name = serializer.data[0].get('name')
             latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
 
             if latitude > 0:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='N')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
+                                                             NorthSouth='N')
             else:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='S')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
+                                                             NorthSouth='S')
 
             serializer1 = ZoneViewSerializer(zone_data, many=True, context={'request': request})
             result = serializer1.data
@@ -183,6 +196,12 @@ def search_data(request):
             for itr in result:
                 sunshine_data = SunshineAvailability.objects.filter(ZoneID=itr['id']).filter(Month=today.month)
                 serializer2 = SunshineAvailabilitySerializer(sunshine_data, many=True, context={'request': request})
+            return Response({
+                'status': True,
+                'message': "Fetched Successfully!!",
+                'zones': serializer1.data,
+                'sunshine': serializer2.data
+            })
         else:
             return Response({
                 'status': False,
@@ -195,13 +214,7 @@ def search_data(request):
         }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
-        return Response({
-            'status': False,
-            'message': "Something went wrong!",
-        }, status=status.HTTP_400_BAD_REQUEST)
     return Response({
-        'status': True,
-        'message': "Fetched Successfully!!",
-        'zones': serializer1.data,
-        'sunshine': serializer2.data
-    })
+        'status': False,
+        'message': "Something went wrong!",
+    }, status=status.HTTP_400_BAD_REQUEST)
