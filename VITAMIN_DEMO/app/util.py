@@ -21,6 +21,10 @@ def Spice():
     return Spices
 
 
+def Nutrient():
+    return Nutrients
+
+
 def default():
     return "Invalid Model"
 
@@ -29,5 +33,6 @@ switcher = {
     "Zones": zones,
     "Sunshine_Availability": Sunshine_availibilty,
     "Common_Food_Allergy": Common_Food_Allergy,
-    "Spices": Spice
+    "Spices": Spice,
+    "Nutrients": Nutrient,
 }
