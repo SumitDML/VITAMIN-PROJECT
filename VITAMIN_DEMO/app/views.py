@@ -89,16 +89,17 @@ def get_child_data(request):
             'status': False,
             'message': "Tab Id is required!",
         }, status=status.HTTP_400_BAD_REQUEST)
-    print(1)
+
     tabChildId = request.GET.get('tab_child_id')
+    
     if tabChildId is None or len(tabChildId) == 0:
         return Response({
             'status': False,
             'message': "Tab_Child Id is required!",
         }, status=status.HTTP_400_BAD_REQUEST)
-    print(2)
+
     page_number = request.GET.get('page_number')
-    print(3)
+
     try:
         all_childs = TabChild.objects.filter(tab_id=tabId)
 
@@ -107,24 +108,18 @@ def get_child_data(request):
                 'status': False,
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
-        print(4)
         result = all_childs.filter(tab_child_id=tabChildId)
-        print(5)
+
         if not result.exists():
             return Response({
                 'status': False,
                 'message': "Invalid child Id!",
             }, status=status.HTTP_400_BAD_REQUEST)
-        print(6)
         serializer = TabChildNameSerializer(result, many=True, context={'request': request})
         name = serializer.data[0].get('name')
-        print(name)
-        print(7)
         model = switch(name)
         serializer1 = getGenericSerializer(model)
-        print(77)
         data = model.objects.all().order_by('id')
-        print(8)
         p = Paginator(data, 25)
         try:
             page_obj = p.get_page(page_number)  # returns the desired page object
@@ -141,6 +136,11 @@ def get_child_data(request):
             'data': serialized_data.data
 
         })
+    except AttributeError:
+        return Response({
+            'status': True,
+            'message': "Child Module Not Found!",
+        }, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
         return Response({
@@ -158,7 +158,6 @@ def search_data(request):
             'message': "Tab Id is required!",
         }, status=status.HTTP_400_BAD_REQUEST)
     try:
-        zip_code = request.GET.get('zip')
 
         all_childs = TabChild.objects.filter(tab_id=tab_id)
 
@@ -168,19 +167,17 @@ def search_data(request):
                 'message': "No Child Record Found!",
             }, status=status.HTTP_404_NOT_FOUND)
 
-        if not zip_code is None:
+        zip_code = request.GET.get('zip')
+        if zip_code:
             zone = all_childs.filter(name='Zones')
             serializer = TabChildNameSerializer(zone, many=True, context={'request': request})
             zone_name = serializer.data[0].get('name')
-
             latitude = ZipCodes.objects.get(zip_code=zip_code).latitude
 
             if latitude > 0:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
-                                                             NorthSouth='N')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='N')
             else:
-                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,
-                                                             NorthSouth='S')
+                zone_data = switch(zone_name).objects.filter(LatitudeMin__lte=latitude, LatitudeMax__gte=latitude,NorthSouth='S')
 
             serializer1 = ZoneViewSerializer(zone_data, many=True, context={'request': request})
             result = serializer1.data
@@ -188,7 +185,11 @@ def search_data(request):
             for itr in result:
                 sunshine_data = SunshineAvailability.objects.filter(ZoneID=itr['id']).filter(Month=today.month)
                 serializer2 = SunshineAvailabilitySerializer(sunshine_data, many=True, context={'request': request})
-
+        else:
+            return Response({
+                'status': False,
+                'message': "No data!",
+            }, status=status.HTTP_400_BAD_REQUEST)
     except ZipCodes.DoesNotExist:
         return Response({
             'status': False,

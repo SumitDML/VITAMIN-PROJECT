@@ -105,3 +105,18 @@ class Spices(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Nutrients(models.Model):
+    nutrientId = models.IntegerField(primary_key=True, editable=False, name='id')
+    nutrient = models.CharField(name='Nutrient', max_length=255)
+    parent = models.CharField(name='Parent', max_length=255, null=True)
+    supplementName = models.CharField(name='Supplements_Name', max_length=255, null=True)
+    foodNutritionName = models.CharField(name='Food_Nutrition_Name', max_length=255, null=True)
+    active = models.BooleanField(name='Active', null=True)
+
+    class Meta:
+        db_table = 'Nutrients'
+
+    def __str__(self):
+        return self.name
