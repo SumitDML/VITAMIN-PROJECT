@@ -56,7 +56,7 @@ def getGenericSerializer(model_arg):
     return GenericSerializer
 
 
-class SpicesSerializer(serializers.ModelSerializer):
+class NutrientsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Spices
+        model = Nutrients
         fields = '__all__'

@@ -7,7 +7,7 @@ urlpatterns = [
     path('tabs/listing/', get_tabs, name="get_tabs"),
     path('tabs/child/listing', get_tab_childs, name="get_tab_childs"),
     path('tabs/child/data', get_child_data, name="get_child_data"),
-    path('search2/', SearchListView.as_view()),
+    # path('search2/', SearchListView.as_view()),
 
 
 ]
