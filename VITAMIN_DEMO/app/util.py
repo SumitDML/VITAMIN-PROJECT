@@ -13,7 +13,7 @@ def Sunshine_availibilty():
     return SunshineAvailability
 
 
-def Common_Food_Allergy():
+def Common_Food_Allergies():
     return FoodAllergy
 
 
@@ -32,7 +32,7 @@ def default():
 switcher = {
     "Zones": zones,
     "Sunshine_Availability": Sunshine_availibilty,
-    "Common_Food_Allergy": Common_Food_Allergy,
+    "Common_Food_Allergies": Common_Food_Allergies,
     "Spices": Spice,
     "Nutrients": Nutrient,
 }

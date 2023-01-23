@@ -115,7 +115,6 @@ def get_child_data(request):
             }, status=status.HTTP_400_BAD_REQUEST)
         serializer = TabChildNameSerializer(result, many=True, context={'request': request})
         name = serializer.data[0].get('name')
-        print(name)
         model = switch(name)
         serializer1 = getGenericSerializer(model)
         data = model.objects.all().order_by('id')
