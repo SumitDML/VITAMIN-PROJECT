@@ -1,0 +1,330 @@
+Index: app/models.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.db import models\n\n\nclass Tabs(models.Model):\n    tabId = models.AutoField(primary_key=True, editable=False, name='tab_id')\n    name = models.CharField(name='name', max_length=255)\n    displayName = models.CharField(name='display_name', max_length=255)\n    createdAt = models.DateTimeField(auto_now=True, name='created_at', null=True)\n    updatedAt = models.DateTimeField(auto_now_add=True, name='updated_at', null=True)\n\n    class Meta:\n        db_table = 'tabs'\n\n    def __str__(self):\n        return self.name\n\n\nclass TabChild(models.Model):\n    tabChildId = models.AutoField(primary_key=True, editable=False, name='tab_child_id')\n    name = models.CharField(name='name', max_length=255)\n    displayName = models.CharField(name='display_name', max_length=255)\n    tabs = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='childs', name='tab', null=True)\n    createdAt = models.DateTimeField(auto_now=True, name='created_at', null=True)\n    updatedAt = models.DateTimeField(auto_now_add=True, name='updated_at', null=True)\n\n    class Meta:\n        db_table = 'tab_childs'\n\n    def __str__(self):\n        return self.name\n\n\nclass TabChildMappings(models.Model):\n    tabId = models.ForeignKey(Tabs, on_delete=models.CASCADE, related_name='tabs', name='tab', null=True)\n    tabChildId = models.ForeignKey(TabChild, on_delete=models.CASCADE, related_name='childs', name='tab_child',\n                                   null=True)\n\n    class Meta:\n        db_table = 'tab_child_mappings'\n\n    def __str__(self):\n        return self.name\n\n\nclass Zones(models.Model):\n    ZoneID = models.IntegerField(primary_key=True, editable=False, name='id')\n    LatitudeMin = models.FloatField(name='LatitudeMin')\n    LatitudeMax = models.FloatField(name='LatitudeMax')\n    NorthSouth = models.CharField(max_length=1, name='NorthSouth')\n\n    class Meta:\n        db_table = 'zones'\n\n    def __str__(self):\n        return self.name\n\n\nclass SunshineAvailability(models.Model):\n    sunshine_id = models.AutoField(primary_key=True, editable=False, name='id', null=False)\n    Month = models.IntegerField(name='Month')\n    Strength = models.IntegerField(name='Strength')\n    ZoneID = models.ForeignKey('Zones', on_delete=models.CASCADE, related_name='strengths', name='ZoneID', null=True)\n\n    class Meta:\n        db_table = 'sunshine_availability'\n\n    def __str__(self):\n        return self.name\n\n\nclass ZipCodes(models.Model):\n    zipCode = models.CharField(max_length=5, name='zip_code', primary_key=True, editable=False, null=False)\n    latitude = models.FloatField(name='latitude', null=False)\n    longitude = models.FloatField(name='longitude', null=False)\n\n    class Meta:\n        db_table = 'zip_codes'\n\n    def __str__(self):\n        return self.name\n\n\nclass FoodAllergy(models.Model):\n    foodAllergyId = models.IntegerField(primary_key=True, editable=False, name='id')\n    foodAllergyName = models.CharField(name='food_allergy_name', max_length=255)\n    allergyDescription = models.TextField(name='food_allergy_description')\n\n    class Meta:\n        db_table = 'food_allergy'\n\n    def __str__(self):\n        return self.name\n\n\nclass Spices(models.Model):\n    spiceId = models.IntegerField(primary_key=True, editable=False, name='id')\n    spiceName = models.CharField(name='spice_name', max_length=255)\n    ingredients = models.CharField(name='ingredients', max_length=255)\n    upcCode = models.CharField(name='upc_code', max_length=255)\n    sizeQuantity = models.FloatField(name='size_quantity', null=False)\n    sizeMetric = models.CharField(name='size_metric', null=False, max_length=255)\n\n    class Meta:\n        db_table = 'spices'\n\n    def __str__(self):\n        return self.name\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/models.py b/app/models.py
+--- a/app/models.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ b/app/models.py	(date 1674215399225)
+@@ -97,7 +97,7 @@
+     spiceName = models.CharField(name='spice_name', max_length=255)
+     ingredients = models.CharField(name='ingredients', max_length=255)
+     upcCode = models.CharField(name='upc_code', max_length=255)
+-    sizeQuantity = models.FloatField(name='size_quantity', null=False)
++    sizeQuantity = models.FloatField(name='size_quantity', null=True)
+     sizeMetric = models.CharField(name='size_metric', null=False, max_length=255)
+ 
+     class Meta:
+Index: app/migrations/0003_auto_20230113_0611.py
+===================================================================
+diff --git a/app/migrations/0003_auto_20230113_0611.py b/app/migrations/0003_auto_20230113_0611.py
+deleted file mode 100644
+--- a/app/migrations/0003_auto_20230113_0611.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,22 +0,0 @@
+-from __future__ import unicode_literals
+-from django.db import migrations
+-
+-
+-def load_app_from_sql():
+-    import os
+-    sql_statements = open(os.path.join('app/sql/InitialData.sql'), 'r').read()
+-    return sql_statements
+-
+-
+-def delete_app_with_sql():
+-    return 'DELETE from zip_codes;'
+-
+-
+-class Migration(migrations.Migration):
+-    dependencies = [
+-        ('app', '0002_auto_20230113_0611'),
+-    ]
+-
+-    operations = [
+-        migrations.RunSQL(load_app_from_sql(), delete_app_with_sql()),
+-    ]
+Index: app/migrations/0002_auto_20230113_0611.py
+===================================================================
+diff --git a/app/migrations/0002_auto_20230113_0611.py b/app/migrations/0002_auto_20230113_0611.py
+deleted file mode 100644
+--- a/app/migrations/0002_auto_20230113_0611.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,23 +0,0 @@
+-from __future__ import unicode_literals
+-from django.db import migrations
+-
+-
+-def load_app_from_sql():
+-    import os
+-    sql_statements = open(os.path.join('app/sql/ZipCodes.sql'), 'r').read()
+-    return sql_statements
+-
+-
+-def delete_app_with_sql():
+-    return 'DELETE from zip_codes;'
+-
+-
+-class Migration(migrations.Migration):
+-
+-    dependencies = [
+-        ('app', '0001_initial'),
+-    ]
+-
+-    operations = [
+-        migrations.RunSQL(load_app_from_sql(), delete_app_with_sql()),
+-    ]
+Index: app/migrations/0001_initial.py
+===================================================================
+diff --git a/app/migrations/0001_initial.py b/app/migrations/0001_initial.py
+deleted file mode 100644
+--- a/app/migrations/0001_initial.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,92 +0,0 @@
+-# Generated by Django 4.1.5 on 2023-01-13 06:11
+-
+-from django.db import migrations, models
+-import django.db.models.deletion
+-
+-
+-class Migration(migrations.Migration):
+-
+-    initial = True
+-
+-    dependencies = [
+-    ]
+-
+-    operations = [
+-        migrations.CreateModel(
+-            name='TabChild',
+-            fields=[
+-                ('tab_child_id', models.AutoField(editable=False, primary_key=True, serialize=False)),
+-                ('name', models.CharField(max_length=255)),
+-                ('display_name', models.CharField(max_length=255)),
+-                ('created_at', models.DateTimeField(auto_now=True, null=True)),
+-                ('updated_at', models.DateTimeField(auto_now_add=True, null=True)),
+-            ],
+-            options={
+-                'db_table': 'tab_childs',
+-            },
+-        ),
+-        migrations.CreateModel(
+-            name='Tabs',
+-            fields=[
+-                ('tab_id', models.AutoField(editable=False, primary_key=True, serialize=False)),
+-                ('name', models.CharField(max_length=255)),
+-                ('display_name', models.CharField(max_length=255)),
+-                ('created_at', models.DateTimeField(auto_now=True, null=True)),
+-                ('updated_at', models.DateTimeField(auto_now_add=True, null=True)),
+-            ],
+-            options={
+-                'db_table': 'tabs',
+-            },
+-        ),
+-        migrations.CreateModel(
+-            name='ZipCodes',
+-            fields=[
+-                ('zip_code', models.CharField(editable=False, max_length=5, primary_key=True, serialize=False)),
+-                ('latitude', models.FloatField()),
+-                ('longitude', models.FloatField()),
+-            ],
+-            options={
+-                'db_table': 'zip_codes',
+-            },
+-        ),
+-        migrations.CreateModel(
+-            name='Zones',
+-            fields=[
+-                ('id', models.IntegerField(editable=False, primary_key=True, serialize=False)),
+-                ('LatitudeMin', models.FloatField()),
+-                ('LatitudeMax', models.FloatField()),
+-                ('NorthSouth', models.CharField(max_length=1)),
+-            ],
+-            options={
+-                'db_table': 'zones',
+-            },
+-        ),
+-        migrations.CreateModel(
+-            name='TabChildMappings',
+-            fields=[
+-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+-                ('tab', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tabs', to='app.tabs')),
+-                ('tab_child', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='childs', to='app.tabchild')),
+-            ],
+-            options={
+-                'db_table': 'tab_child_mappings',
+-            },
+-        ),
+-        migrations.AddField(
+-            model_name='tabchild',
+-            name='tab',
+-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='childs', to='app.tabs'),
+-        ),
+-        migrations.CreateModel(
+-            name='SunshineAvailability',
+-            fields=[
+-                ('id', models.AutoField(editable=False, primary_key=True, serialize=False)),
+-                ('Month', models.IntegerField()),
+-                ('Strength', models.IntegerField()),
+-                ('ZoneID', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='strengths', to='app.zones')),
+-            ],
+-            options={
+-                'db_table': 'sunshine_availability',
+-            },
+-        ),
+-    ]
+Index: app/migrations/0007_auto_20230120_0701.py
+===================================================================
+diff --git a/app/migrations/0007_auto_20230120_0701.py b/app/migrations/0007_auto_20230120_0701.py
+deleted file mode 100644
+--- a/app/migrations/0007_auto_20230120_0701.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,19 +0,0 @@
+-
+-from __future__ import unicode_literals
+-from django.db import migrations
+-
+-
+-def load_app_from_sql():
+-    import os
+-    sql_statements = open(os.path.join('app/sql/AllergyAndSpices.sql'), 'r').read()
+-    return sql_statements
+-
+-
+-class Migration(migrations.Migration):
+-    dependencies = [
+-        ('app', '0006_auto_20230120_0700'),
+-    ]
+-
+-    operations = [
+-        migrations.RunSQL(load_app_from_sql(), )
+-    ]
+Index: app/migrations/0005_foodallergy_spices.py
+===================================================================
+diff --git a/app/migrations/0005_foodallergy_spices.py b/app/migrations/0005_foodallergy_spices.py
+deleted file mode 100644
+--- a/app/migrations/0005_foodallergy_spices.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,38 +0,0 @@
+-# Generated by Django 3.2.12 on 2023-01-20 06:59
+-
+-from django.db import migrations, models
+-
+-
+-class Migration(migrations.Migration):
+-
+-    dependencies = [
+-        ('app', '0004_auto_20230113_0611'),
+-    ]
+-
+-    operations = [
+-        migrations.CreateModel(
+-            name='FoodAllergy',
+-            fields=[
+-                ('id', models.IntegerField(editable=False, primary_key=True, serialize=False)),
+-                ('food_allergy_name', models.CharField(max_length=255)),
+-                ('food_allergy_description', models.TextField()),
+-            ],
+-            options={
+-                'db_table': 'food_allergy',
+-            },
+-        ),
+-        migrations.CreateModel(
+-            name='Spices',
+-            fields=[
+-                ('id', models.IntegerField(editable=False, primary_key=True, serialize=False)),
+-                ('spice_name', models.CharField(max_length=255)),
+-                ('ingredients', models.CharField(max_length=255)),
+-                ('upc_code', models.CharField(max_length=255)),
+-                ('size_quantity', models.FloatField()),
+-                ('size_metric', models.CharField(max_length=255)),
+-            ],
+-            options={
+-                'db_table': 'spices',
+-            },
+-        ),
+-    ]
+Index: app/migrations/0004_auto_20230113_0611.py
+===================================================================
+diff --git a/app/migrations/0004_auto_20230113_0611.py b/app/migrations/0004_auto_20230113_0611.py
+deleted file mode 100644
+--- a/app/migrations/0004_auto_20230113_0611.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,33 +0,0 @@
+-# Generated by Django 4.1.5 on 2023-01-12 04:22
+-
+-from django.db import migrations
+-
+-
+-class Migration(migrations.Migration):
+-    def initiateData(self, schema_editor):
+-
+-        from django.conf import settings
+-        from sqlalchemy import create_engine
+-        import pandas as pd
+-        from app.models import SunshineAvailability, Zones
+-        xls = pd.ExcelFile('app/data/Vitamin D (1).xlsx')
+-        df1 = pd.read_excel(xls, 'Vitamin D Strength')
+-        df2 = pd.read_excel(xls, 'Zones')
+-
+-        for df2 in df2.itertuples():
+-            obj1 = Zones.objects.create(id=df2.ZoneID, LatitudeMin=df2.LatitudeMin, LatitudeMax=df2.LatitudeMax,
+-                                        NorthSouth=df2.NorthSouth)
+-            obj1.save()
+-
+-        for df1 in df1.itertuples():
+-            zones = Zones.objects.get(id=df1.ZoneID)
+-            obj = SunshineAvailability(ZoneID=zones, Month=df1.Month, Strength=df1.Strength)
+-            obj.save()
+-
+-    dependencies = [
+-        ('app', '0003_auto_20230113_0611'),
+-    ]
+-
+-    operations = [
+-        migrations.RunPython(initiateData)
+-    ]
+Index: app/migrations/0006_auto_20230120_0700.py
+===================================================================
+diff --git a/app/migrations/0006_auto_20230120_0700.py b/app/migrations/0006_auto_20230120_0700.py
+deleted file mode 100644
+--- a/app/migrations/0006_auto_20230120_0700.py	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
++++ /dev/null	(revision 9202d505b47b3480c07b34ab5c20b6eef91838c8)
+@@ -1,35 +0,0 @@
+-# Generated by Django 3.2.12 on 2023-01-20 07:00
+-
+-
+-from django.db import migrations
+-
+-
+-class Migration(migrations.Migration):
+-    def initiateData(self, schema_editor):
+-
+-        from django.conf import settings
+-        from sqlalchemy import create_engine
+-        import pandas as pd
+-        from app.models import Spices, FoodAllergy
+-        xls1 = pd.ExcelFile('app/data/Spices.xlsx')
+-        xls2 = pd.ExcelFile('app/data/Common Food Allergies.xlsx')
+-        df1 = pd.read_excel(xls1, 'Sheet1')
+-        df2 = pd.read_excel(xls2, 'Allergies')
+-
+-        for df1 in df1.itertuples():
+-            obj1 = Spices.objects.create(id=df1.ID, spice_name=df1.Name, ingredients=df1.Ingredients,
+-                                         upc_code=df1.UPC_Code, size_quantity=df1.Size_Quantity,
+-                                         size_metric=df1.Size_Metric)
+-            obj1.save()
+-
+-        for df2 in df2.itertuples():
+-            obj1 = FoodAllergy.objects.create(id=df2.ID, food_allergy_name=df2.Allergy,
+-                                              food_allergy_description=df2.Description)
+-            obj1.save()
+-
+-    dependencies = [
+-        ('app', '0005_foodallergy_spices'),
+-    ]
+-
+-    operations = [migrations.RunPython(initiateData)
+-                  ]

@@ -4,7 +4,7 @@ from django.db import migrations
 
 def load_app_from_sql():
     import os
-    sql_statements = open(os.path.join('app/sql/ZipCodes.sql'), 'r').read()
+    sql_statements = open(os.path.join('app/sql/InitialData.sql'), 'r').read()
     return sql_statements
 
 
@@ -15,7 +15,7 @@ def delete_app_with_sql():
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0001_initial'),
+        ('app', '0002_auto_20230123_1055'),
     ]
 
     operations = [

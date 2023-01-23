@@ -11,7 +11,7 @@ class AppConfig(AppConfig):
     #     # from .resources import ZonesResources, SunshineAvailabilityResources
     #     from .models import Zones, SunshineAvailability
     #
-    #     xls = pd.ExcelFile('app/data/Vitamin D (1).xlsx')
+    #     xls = pd.ExcelFile('app/data/Vitamin D.xlsx')
     #     sunshine_availability_data = pd.read_excel(xls, 'Vitamin D Strength')
     #     zones_data = pd.read_excel(xls, 'Zones')
     #
