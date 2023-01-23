@@ -169,6 +169,11 @@ def search_data(request):
         if int(tab_id) == 3:
             search = request.GET.get('search')
             nutrient_data = Nutrients.objects.filter(Nutrient__istartswith=search)
+            if len(nutrient_data) == 0:
+                return Response({
+                    'status': False,
+                    'message': "No data!",
+                }, status=status.HTTP_400_BAD_REQUEST)
             serializer3 = NutrientsSerializer(nutrient_data, many=True, context={'request': request})
             return Response({
                 'status': True,
@@ -205,7 +210,7 @@ def search_data(request):
         else:
             return Response({
                 'status': False,
-                'message': "No data!",
+                'message': "Nothing to search!",
             }, status=status.HTTP_400_BAD_REQUEST)
     except ZipCodes.DoesNotExist:
         return Response({
