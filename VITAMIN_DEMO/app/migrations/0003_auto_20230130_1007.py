@@ -11,11 +11,10 @@ def load_app_from_sql():
 def delete_app_with_sql():
     return 'DELETE from zip_codes;'
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0002_auto_20230123_1055'),
+        ('app', '0002_auto_20230130_1007'),
     ]
 
     operations = [

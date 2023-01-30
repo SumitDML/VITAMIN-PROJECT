@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,8 +42,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-
-
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -83,24 +81,13 @@ WSGI_APPLICATION = 'Project_Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbtest',
-        'USER': 'usertest',
-        'PASSWORD': 'pwtest',
-        'HOST': '14.97.60.130',
+        'NAME': 'postgres',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-#
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'vitamin',
-#         'USER': 'root',
-#         'PASSWORD': 'Sumit@8105',
-#         'HOST': '127.0.0.1',
-#         'PORT': '3306'
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -136,6 +123,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+    # BASE_DIR / "static",
+    # '/var/www/static/',
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -152,6 +144,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # ] # If this is used, then not need to use `CORS_ALLOW_ALL_ORIGINS = True`CORS_ALLOWED_ORIGIN_REGEXES = [
 #
 
-CORS_ALLOW_METHODS = ['DELETE','GET','OPTIONS','PATCH','POST','PUT',]
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT', ]
 
-CORS_ALLOW_HEADERS = ['accept','accept-encoding','authorization','content-type','dnt','origin','user-agent','x-csrftoken','x-requested-with',]
+CORS_ALLOW_HEADERS = ['accept', 'accept-encoding', 'authorization', 'content-type', 'dnt', 'origin', 'user-agent',
+                      'x-csrftoken', 'x-requested-with', ]
