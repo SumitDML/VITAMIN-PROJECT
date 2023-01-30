@@ -99,8 +99,8 @@ class Spices(models.Model):
     upcCode = models.CharField(name='UPC_Code', max_length=255)
     sizeQuantity = models.FloatField(name='Size_Quantity', null=True)
     sizeMetric = models.CharField(name='Size_Metric', null=True, max_length=255)
-    imageUrl = models.TextField(name='Image_URL')
-    recipesUrl = models.TextField(name='Recipes_URL', null=True)
+    imageUrl = models.URLField(name='Image_URL')
+    recipesUrl = models.URLField(name='Recipes_URL', null=True)
 
     class Meta:
         db_table = 'spices'
